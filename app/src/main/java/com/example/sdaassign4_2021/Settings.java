@@ -20,10 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-ppublic class Settings extends Fragment {
+
+public class Settings extends Fragment {
     EditText userId, userEmail, userBorId;
     Button saveDet,resetData;
     CheckBox checkBox;
@@ -56,44 +54,38 @@ ppublic class Settings extends Fragment {
         userEmail.setText(st2);
         userBorId.setText(st3);
 
-        saveDet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(verifyEmailAddress() == true){
-                    if(checkBox.isChecked()) {
-                        //Save the UserId
-                        mUser = userId.getText().toString();
-                        mEmail = userEmail.getText().toString();
-                        mBorId = userBorId.getText().toString();
-                        editor.putString("I", mUser);
-                        editor.putString("E", mEmail);
-                        editor.putString("B", mBorId);
-                        editor.commit();
-                        Log.d("Test 1", "onClick: ");
-                        Toast.makeText(getContext(), "Info saved", Toast.LENGTH_SHORT).show();
-                    }else{
-                        editor.putString("I", "");
-                        editor.putString("E", "");
-                        editor.putString("B", "");
-                        Log.d("Test 2", "onClick: ");
-                        Toast.makeText(getContext(), "Information will not be saved ", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    verifyEmailAddress();
+        saveDet.setOnClickListener(v -> {
+            if(verifyEmailAddress()){
+                if(checkBox.isChecked()) {
+                    //Save the UserId
+                    mUser = userId.getText().toString();
+                    mEmail = userEmail.getText().toString();
+                    mBorId = userBorId.getText().toString();
+                    editor.putString("I", mUser);
+                    editor.putString("E", mEmail);
+                    editor.putString("B", mBorId);
+                    editor.commit();
+                    Log.d("Test 1", "onClick: ");
+                    Toast.makeText(getContext(), "Info saved", Toast.LENGTH_SHORT).show();
+                }else{
+                    editor.putString("I", "");
+                    editor.putString("E", "");
+                    editor.putString("B", "");
+                    Log.d("Test 2", "onClick: ");
+                    Toast.makeText(getContext(), "Information will not be saved ", Toast.LENGTH_SHORT).show();
                 }
+            }else {
+                verifyEmailAddress();
             }
         });
-        resetData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Test 3", "onClick: Cleared");
-                userEmail.getText().clear();
-                userBorId.getText().clear();
-                userId.getText().clear();
-                prefs.edit().clear().commit();
-            }
+        resetData.setOnClickListener(v -> {
+            Log.d("Test 3", "onClick: Cleared");
+            userEmail.getText().clear();
+            userBorId.getText().clear();
+            userId.getText().clear();
+            prefs.edit().clear().apply();
         });
-
+//
         return view;
     }
     private boolean verifyEmailAddress(){

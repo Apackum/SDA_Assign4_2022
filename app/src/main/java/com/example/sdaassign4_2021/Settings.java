@@ -23,13 +23,12 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Settings extends Fragment {
+ppublic class Settings extends Fragment {
     EditText userId, userEmail, userBorId;
     Button saveDet,resetData;
     CheckBox checkBox;
     String mUser,mEmail,mBorId;
     SharedPreferences sp;
-
     public Settings() {
         // Required empty public constructor
     }
@@ -39,7 +38,6 @@ public class Settings extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
         userId = view.findViewById(R.id.userName);
         userEmail = view.findViewById(R.id.email);
         userBorId = view.findViewById(R.id.borrowerID);
@@ -61,7 +59,7 @@ public class Settings extends Fragment {
         saveDet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if(verifyEmailAddress() == true){
+                if(verifyEmailAddress() == true){
                     if(checkBox.isChecked()) {
                         //Save the UserId
                         mUser = userId.getText().toString();
@@ -80,13 +78,38 @@ public class Settings extends Fragment {
                         Log.d("Test 2", "onClick: ");
                         Toast.makeText(getContext(), "Information will not be saved ", Toast.LENGTH_SHORT).show();
                     }
-                }//else {
-                  //  verifyEmailAddress();
-               // }
-           // }
+                }else {
+                    verifyEmailAddress();
+                }
+            }
+        });
+        resetData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Test 3", "onClick: Cleared");
+                userEmail.getText().clear();
+                userBorId.getText().clear();
+                userId.getText().clear();
+                prefs.edit().clear().commit();
+            }
         });
 
         return view;
     }
+    private boolean verifyEmailAddress(){
+        String emailInput = userEmail.getText().toString();
+        String nameInput = userId.getText().toString();
+        String borInput = userBorId.getText().toString();
 
+
+        if(!emailInput.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailInput).matches() && !nameInput.isEmpty() && !borInput.isEmpty()){
+            Toast.makeText(getContext(),"Email Verified",Toast.LENGTH_SHORT);
+            Log.d("Test 4", "verifyEmailAddress: Passed ");
+            return true;
+        }else{
+            Toast.makeText(getContext(),"Please enter a valid email, don't leave fields empty",Toast.LENGTH_SHORT).show();
+            Log.d("Test 5", "verifyEmailAddress: failure ");
+            return false;
+        }
+    }
 }
